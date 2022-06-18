@@ -1,6 +1,7 @@
 
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {getFirestore, collection} from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: "AIzaSyCmrLCekGPczq8VpIqP8xs9WVb20XvhzIE",
@@ -12,7 +13,16 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig)
-
+const db = getFirestore(app);
+const itemsColRef = collection(db, "items");
 const auth = getAuth(app)
 
-export { auth }
+const getCurrentUser = () => new Promise((resolve, reject) => {
+    const unsub = onAuthStateChanged(auth, user => {
+        unsub()
+        resolve(user)
+    }, reject)
+})
+
+export {getCurrentUser, auth }
+export default itemsColRef;

@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Page-Home.vue'
 import Login from '../views/Page-Login.vue'
 import About from '../views/Page-About'
-import { auth } from '../firebase'
+import AddItems from '../views/Page-AddItems'
+import EditItems from '../views/Page-EditItems'
+import { getCurrentUser } from '../firebase'
 
 const routes = [
   {
@@ -18,13 +20,32 @@ const routes = [
     name: 'About',
     component: About,
     meta: {
+      noAuth: true
+    }
+  },
+  {
+    path: '/add-items',
+    name: 'additems',
+    component: AddItems,
+    meta: {
+      requiresAuth: true
+    }
+  },  
+  {
+    path: '/item/:itemId',
+    name: 'edititems',
+    component: EditItems,
+    meta: {
       requiresAuth: true
     }
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      noAuth: true,
+    }
   }
 ]
 
@@ -33,20 +54,21 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (auth.currentUser) {
-    if (to.matched.some(record => record.meta.requiresAuth) &&  to.path === '/login'){
-    next('/')
-    return;
-  }
-}
 
-  if (to.matched.some(record => record.meta.requiresAuth) && !auth.currentUser) {
+router.beforeEach(async(to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const noAuth = to.matched.some(record => record.meta.noAuth)
+
+  const currentUser = await getCurrentUser()
+
+
+  if (requiresAuth && !currentUser) {
     next('/login')
-    return;
+  } else if (noAuth && currentUser) {
+    next('/')
+  } else {
+    next()
   }
-
-  next();
 })
 
 

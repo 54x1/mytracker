@@ -6,7 +6,7 @@
       <button @click="$store.dispatch('logout')">Logout</button>
     </div>
     <h1>{{ title }}</h1>
-    <Button />
+    <Button @btn-click="$emit('toggle-add-task')" :text="showAddTask ? 'close' : 'Add Task'" :color="showAddTask ? 'red': 'green'"/>
       
   </header>
   <router-view/>
@@ -14,12 +14,13 @@
 <script>
 import Button from "./Component-Button.vue";
 export default {
-  name: "Component-Header",
+  name: "Header",
   props: {
     title: {
       type: String,
       default: "My Tracker",
     },
+    showAddTask: Boolean
   },
   components: {
     Button,

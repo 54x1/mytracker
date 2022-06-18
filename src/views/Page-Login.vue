@@ -1,5 +1,5 @@
 <template>
-	<main class="login">
+	<main v-if="!$store.state.user" class="login">
 		<section class="forms">
 
 			<form class="register" @submit.prevent="register">
