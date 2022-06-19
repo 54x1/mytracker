@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     async getItem() {
-      let itemRef =  doc(itemsColRef, this.itemId)
+      let itemRef = await doc(itemsColRef, this.itemId)
           this.docRef = itemRef
     let item = await getDoc(this.docRef)
     console.log("item", item.data())

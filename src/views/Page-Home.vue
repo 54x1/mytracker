@@ -1,5 +1,6 @@
 <template>
   <main class="home">
+    {{items.id}}
     <h1>Welcome {{username}}!</h1>
     <div class="container">
       <div class="row">
@@ -13,7 +14,7 @@
               </router-link>
               <span class="badge badge-primary badge-pill">
               <router-link :to="{path:`/edit/${item.id}`}" class="btn btn-primary">Edit</router-link>
-              <a href="#" @click.stop="deleteItem(item.id)" id="del" class="btn btn-danger">Delete</a>
+              <a href="#" @click.stop="deleteItem(item.id, userId)" id="del" class="btn btn-danger">Delete</a>
               </span>
             </li>
           </ul>
@@ -24,7 +25,7 @@
 </template>
 <script>
 import itemsColRef from '../firebase'
-import { getDocs, doc, deleteDoc } from 'firebase/firestore'
+import {getDocs, doc, deleteDoc } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 let userId
@@ -45,50 +46,46 @@ export default {
   },
   data(){
     return {
+      userId: userId,
       username: username,
-      items: [],
-      selectedDoc: null
+      items: []
     }
   },
   methods:{
-//     async itemInfo(itemId){
-      
-//       let itemSnap = await getDoc(itemsColRef,itemId)
-//             // let ref = getDocs(itemId)
-//             itemSnap.get().then(snapshot => {  //DocSnapshot
-//       if (snapshot.exists) {
-//           let post = snapshot.data()
-//             console.log("iiitem", post)
-//       } else {
-//           // snapshot.data() will be undefined in this case
-//           console.log("No such document!");
-//       }  
-// })
-          
-//       console.log("itemSnap", itemSnap)
-//       console.log(`${itemId} has been clicked!`)
-//     },
-    async fetchItems(){
-      let itemsSnap = await getDocs(itemsColRef, userId)
+    async fetchItems(userId) {
       let items = []
-      itemsSnap.forEach(item=>{
-        let itemData = item.data();
-        itemData.id = item.id;
+      console.log(userId)
+let itemsSnap = await getDocs(itemsColRef, userId)
+ itemsSnap.forEach(item=>{
+        // 
+        if (item.data().userId === userId){
+         console.log(item.id)
+         let itemData = item.data()
+         itemData.id = item.id
         items.push(itemData);
+        }
       })
       this.items = items
             console.log("fiitems", items)
-    },
-     async deleteItem(itemId){
+       
+//        console.log(itemsSnap)
+       
+  },
+     async deleteItem(itemId, userId){
        let itemRef = await doc(itemsColRef, itemId)
         await deleteDoc(itemRef)
        alert("Item has been deleted!")
-       let itemsSnap = await getDocs(itemsColRef, userId)
       let items = []
-      itemsSnap.forEach(item=>{
-        let itemData = item.data();
-        itemData.id = item.id;
+      console.log(userId)
+let itemsSnap = await getDocs(itemsColRef, userId)
+ itemsSnap.forEach(item=>{
+        // 
+        if (item.data().userId === userId){
+         console.log(item.id)
+         let itemData = item.data()
+         itemData.id = item.id
         items.push(itemData);
+        }
       })
       this.items = items
             console.log("fiitems", items)
@@ -96,7 +93,7 @@ export default {
     }
   },
   created(){
-    this.fetchItems()
+    this.fetchItems(userId)
   }
 }
 </script>
