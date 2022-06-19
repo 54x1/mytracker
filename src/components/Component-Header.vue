@@ -6,7 +6,6 @@
       <button @click="$store.dispatch('logout')">Logout</button>
     </div>
     <h1>{{ title }}</h1>
-    <Button @btn-click="$emit('toggle-add-task')" :text="showAddTask ? 'close' : 'Add Task'" :color="showAddTask ? 'red': 'green'"/>
       
   </header>
   <router-view/>

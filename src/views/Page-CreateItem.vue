@@ -41,9 +41,18 @@
 <script>
 import itemsColRef from '../firebase'
 import {addDoc} from 'firebase/firestore'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+let userId
+const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+     userId = user.uid;
+  }
+});
 export default {
   data(){
     return {
+      userId: userId,
       name: null,
       rank: null,
       status: null
