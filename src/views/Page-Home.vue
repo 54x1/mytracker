@@ -78,6 +78,13 @@ export default {
     }
   },
   methods:{
+    onLoadCheck(){
+      const checkBody = document.querySelectorAll('.accordion-body').length > 0
+
+if (checkBody) {
+  console.log('here');
+}
+    },
     pathTo(cateId){
       this.$router.push('/category/'+cateId)
     },
@@ -145,6 +152,9 @@ let cateSnap = await getDocs(itemsColRef, userId)
         }
          })
          }
+  },
+     beforeMount() {
+    this.onLoadCheck();
   },
   created(){
     this.fetchItems(userId)

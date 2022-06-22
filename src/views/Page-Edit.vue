@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-md-8 offset-md-2">
           <h1>Edit {{itemName}} </h1>
-          <form @submit.prevent="editItem()">
+          <form @submit.prevent="editItem()" class="form-inline">
           <div class="form-flex">
             <div class="form-group">
               <input
