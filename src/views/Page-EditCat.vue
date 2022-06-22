@@ -3,31 +3,15 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-md-6 offet-md-3">
-          <h1>Edit Items </h1>
-          <form @submit.prevent="editItem()">
+        <div class="col-md-8 offset-md-2">
+          <h1>Edit category</h1>
+          <form @submit.prevent="editItem()" class="form-flex">
             <div class="form-group">
               <input
                 type="text"
                 class="form-control mb-2"
                 placeholder="Enter Name"
                 v-model="itemInfo.name"
-              />
-            </div>
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control mb-2"
-                placeholder="Enter Rank"
-                v-model="itemInfo.rank"
-              />
-            </div>
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control mb-2"
-                placeholder="Enter Status"
-                v-model="itemInfo.status"
               />
             </div>
             <button type="submit" class="btn btn-primary">Update Item</button>
@@ -57,8 +41,6 @@ export default {
       itemInfo: {
         userId: null,
         name: null,
-        rank: null,
-        status: null
       }
     }
   },
@@ -70,8 +52,7 @@ export default {
     console.log("item", item.data())
     let itemData = item.data()
     this.itemInfo.name = itemData.name
-    this.itemInfo.rank = itemData.rank
-    this.itemInfo.status = itemData.status
+    // this.itemInfo.value = itemData.value
     this.itemInfo.userId = userId
   },
   async editItem(){
@@ -81,7 +62,7 @@ export default {
   }
   },
   created(){
-    let itemId = this.$route.params.itemId
+    let itemId = this.$route.params.catId
     this.itemId = itemId
     this.getItem()
   }

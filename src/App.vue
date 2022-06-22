@@ -1,18 +1,15 @@
 <template>
-  <div id="nav" v-if="$store.state.user">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> | 
-    <router-link to="/create">Add Items</router-link> | 
-    <button @click="$store.dispatch('logout')">Logout</button>
-  </div>
-  <router-view/>
+<ComponentHeader />  
 </template>
 
 <script>
 import { onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
-
+import ComponentHeader from './components/Component-Header.vue'
 export default {
+    components: {
+    ComponentHeader
+  },
   setup() {
     const store = useStore()
 
@@ -48,6 +45,16 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.badge-right{
+display:flex
+}
+.form-flex{
+display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
 }
 </style>
 

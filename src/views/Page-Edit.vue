@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-8 offset-md-2">
-          <h1>{{itemInfo.name}} </h1>
+          <h1>Edit {{itemName}} </h1>
           <form @submit.prevent="editItem()">
             <div class="form-group">
               <input
@@ -18,19 +18,19 @@
               <input
                 type="text"
                 class="form-control mb-2"
-                placeholder="Enter Rank"
-                v-model="itemInfo.rank"
+                placeholder="Enter Amount"
+                v-model="itemInfo.amount"
               />
             </div>
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control mb-2"
-                placeholder="Enter Status"
-                v-model="itemInfo.status"
-              />
-            </div>
-            <router-link :to="{path:`/edit/${this.$route.params.itemId}`}" class="btn btn-primary">Edit {{itemInfo.name}}</router-link>
+              <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">{{itemInfo.value}}</button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" role="menu">
+      <li v-for="option in options" :key="option">
+        <a class="dropdown-item"  @click="itemInfo.value = option" href="javascript:void(0)">{{option}}</a>
+      </li>
+    </ul>
+  </div>
+            <button type="submit" class="btn btn-primary">Update Item</button>
           </form>
         </div>
       </div>
@@ -40,7 +40,7 @@
 
 <script>
 import itemsColRef from '../firebase'
-import {getDoc, doc} from 'firebase/firestore'
+import {getDoc, doc, setDoc} from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 let userId
 const auth = getAuth();
@@ -52,13 +52,15 @@ onAuthStateChanged(auth, (user) => {
 export default {
   data(){
     return {
+      itemName: null,
       selectItem: {},
       docRef: null,
+      options: [ 'Weekly','Fortnightly','Monthly','Annually'],
       itemInfo: {
         userId: null,
+        value: null,
         name: null,
-        rank: null,
-        status: null
+        amount: null
       }
     }
   },
@@ -66,14 +68,20 @@ export default {
     async getItem() {
       let itemRef = await doc(itemsColRef, this.itemId)
           this.docRef = itemRef
+             
     let item = await getDoc(this.docRef)
     console.log("item", item.data())
+    this.itemName = item.data().name
     let itemData = item.data()
     this.itemInfo.name = itemData.name
-    this.itemInfo.rank = itemData.rank
-    this.itemInfo.status = itemData.status
+    this.itemInfo.value = itemData.value
     this.itemInfo.userId = userId
   },
+  async editItem(){
+    await setDoc(this.docRef, this.itemInfo)
+    alert("item has been updated")
+    this.$router.push('/')
+  }
   },
   created(){
     let itemId = this.$route.params.itemId

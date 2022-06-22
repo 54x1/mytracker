@@ -2,8 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Page-Home.vue'
 import Login from '../views/Page-Login.vue'
 import About from '../views/Page-About'
-import CreateItem from '../views/Page-CreateItem'
-import EditItem from '../views/Page-EditItem'
+import Add from '../views/Page-Add'
+import Create from '../views/Page-Create'
+import Edit from '../views/Page-Edit'
+import EditCat from '../views/Page-EditCat'
 import Item from '../views/Page-Item'
 import { getCurrentUser } from '../firebase'
 
@@ -22,17 +24,33 @@ const routes = [
     component: About
   },
   {
+    path: '/add/:catId',
+    name: 'add',
+    component: Add,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/create',
-    name: 'createitem',
-    component: CreateItem,
+    name: 'create',
+    component: Create,
     meta: {
       requiresAuth: true
     }
   },  
   {
     path: '/edit/:itemId',
-    name: 'edititem',
-    component: EditItem,
+    name: 'edit',
+    component: Edit,
+    meta: {
+      requiresAuth: true
+    }
+  },    
+  {
+    path: '/category/:catId',
+    name: 'editCat',
+    component: EditCat,
     meta: {
       requiresAuth: true
     }

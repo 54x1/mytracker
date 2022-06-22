@@ -1,29 +1,22 @@
 <template>
-  <header v-if="$store.state.user">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-      <button @click="$store.dispatch('logout')">Logout</button>
-    </div>
-    <h1>{{ title }}</h1>
-      
-  </header>
+<h1 class="pt-4">{{title}}</h1>
+  <div id="nav" v-if="$store.state.user">
+    <router-link class="btn btn-light" to="/">Home</router-link> |
+    <router-link to="/about" class="btn btn-light">About</router-link> | 
+    <!-- <router-link to="/add">Add Items</router-link> |  -->
+    <button class="btn btn-danger" @click="$store.dispatch('logout')">Logout</button>
+  </div>
   <router-view/>
 </template>
 <script>
-import Button from "./Component-Button.vue";
 export default {
-  name: "Header",
+  name: "ComponentHeader",
   props: {
     title: {
       type: String,
-      default: "My Tracker",
+      default: "AniBudget",
     },
-    showAddTask: Boolean
-  },
-  components: {
-    Button,
-  },
+  }
 };
 </script>
 <style scoped>
