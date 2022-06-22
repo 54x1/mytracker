@@ -6,6 +6,7 @@
         <div class="col-md-8 offset-md-2">
           <h1>Edit {{itemName}} </h1>
           <form @submit.prevent="editItem()">
+          <div class="form-flex">
             <div class="form-group">
               <input
                 type="text"
@@ -29,6 +30,7 @@
         <a class="dropdown-item"  @click="itemInfo.value = option" href="javascript:void(0)">{{option}}</a>
       </li>
     </ul>
+  </div>
   </div>
             <button type="submit" class="btn btn-primary">Update Item</button>
           </form>
@@ -66,7 +68,7 @@ export default {
   },
   methods: {
     async getItem() {
-      let itemRef = await doc(itemsColRef, this.itemId)
+      let itemRef =  doc(itemsColRef, this.itemId)
           this.docRef = itemRef
              
     let item = await getDoc(this.docRef)
@@ -74,6 +76,7 @@ export default {
     this.itemName = item.data().name
     let itemData = item.data()
     this.itemInfo.name = itemData.name
+    this.itemInfo.amount = itemData.amount
     this.itemInfo.value = itemData.value
     this.itemInfo.userId = userId
   },

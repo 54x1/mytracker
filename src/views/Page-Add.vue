@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-8 offset-md-2">
           <h1>Add Item</h1>
-          <form @submit.prevent="addItem()" class="form-flex">
+          <form @submit.prevent="addItem()" class="form-inline">
             <div class="d-flex">
             <div class="form-group">
               <input

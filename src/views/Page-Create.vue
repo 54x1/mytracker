@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-md-8 offset-md-2">
           <h1>Create Category</h1>
-          <form @submit.prevent="addItem()">
+          <form @submit.prevent="addItem()" class="form-inline">
             <div class="form-group d-flex">
               <input
                 type="text"
@@ -13,14 +13,6 @@
                 placeholder="Enter Category Name"
                 v-model="name"
               />
-              <!-- <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">{{value}}</button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" role="menu">
-      <li v-for="option in options" :key="option">
-        <a class="dropdown-item"  @click="value = option" href="javascript:void(0)">{{option}}</a>
-      </li>
-    </ul>
-  </div> -->
             </div>
               
             <button type="submit" class="btn btn-primary">Create Category</button>
