@@ -3,10 +3,10 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-md-8 offset-md-2">
-          <h1>Create Category</h1>
-          <form @submit.prevent="addItem()" class="form-inline">
-            <div class="form-group d-flex">
+        <div class="col-md-12 col-lg-8 offset-md-0 offset-lg-2">
+          <h1>Expense Category</h1>
+          <form @submit.prevent="addCategory()" class="form-inline">
+            <div class="form-group d-flex justify-content-center">
               <input
                 type="text"
                 class="form-control mx-4"
@@ -15,7 +15,7 @@
               />
             </div>
               
-            <button type="submit" class="btn btn-primary">Create Category</button>
+            <button type="submit" class="btn btn-primary">Create Expense Category</button>
           </form>
         </div>
       </div>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import itemsColRef from '../firebase'
+import {itemsColRef} from '../firebase'
 import {addDoc} from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 let userId
@@ -46,11 +46,11 @@ export default {
     }
   },
   methods: {
-    async addItem() {
+    async addCategory() {
 
       const addedDoc = await addDoc(itemsColRef, this.$data)
             console.log('creating here', addedDoc)
-            alert("Item Added!")
+            // alert("Item Added!")
             this.$router.push("/")
     }
 

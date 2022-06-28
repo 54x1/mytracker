@@ -55,8 +55,27 @@ display: flex;
     justify-content: center;
 }
 
+.accordion-button::after {
+    right: 28px;
+    top: 68px;
+    position: absolute
+}
+
+.accordion-item{
+border: 3px solid rgba(0,0,0,.125);
+}
+
+.list-group-item{
+  border: 3px solid rgba(0,0,0,.125);
+}
+
 .form-inline{
-  display: inline
+  display: block;
+  padding: 0;
+}
+
+.fa-solid{
+  cursor: pointer;
 }
 </style>
 

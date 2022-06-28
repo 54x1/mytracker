@@ -3,7 +3,7 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-12 col-lg-8 offset-md-0 offset-lg-2">
           <h1>{{itemInfo.name}} </h1>
           <form @submit.prevent="editItem()">
             <div class="form-group">
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import itemsColRef from '../firebase'
+import {itemsColRef} from '../firebase'
 import {getDoc, doc} from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 let userId

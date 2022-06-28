@@ -15,6 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app);
 const itemsColRef = collection(db, "items");
+const viewsColRef = collection(db, "views")
 const auth = getAuth(app)
 
 const getCurrentUser = () => new Promise((resolve, reject) => {
@@ -25,4 +26,4 @@ const getCurrentUser = () => new Promise((resolve, reject) => {
 })
 
 export {getCurrentUser, auth }
-export default itemsColRef;
+export {itemsColRef, viewsColRef}
