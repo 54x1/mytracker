@@ -292,8 +292,8 @@ console.log("m",myView)
       return total;
     },
 
-    focus(amount, period, selected) {
-      let iAmount;
+    calcItems(amount, period, selected) {
+      // let iAmount;
 
       // let temp = 0
 
@@ -302,14 +302,13 @@ console.log("m",myView)
 
       console.log("selected", selected);
       console.log("period", period);
-      console.log("iAmount", iAmount);
+      // console.log("iAmount", iAmount);
       //  console.log( 'vv', new Intl.NumberFormat('en-us', { style: 'currency', currency: 'AUD' }).format(iAmount))
       // this.itemInfo.amount = iAmount.toLocaleString("en-US", {style:"currency", currency:"AUD"})
-      switch (this.selected) {
+        switch (this.selected) {
         case "1":
           switch (period) {
             case "1":
-              // this.cateAmount =  (amount * this.selected * period)
               return amount * this.selected * period;
             case "4":
               return ((amount * this.selected) / 4) * (period * 4);
@@ -318,62 +317,55 @@ console.log("m",myView)
             case "26":
               return ((amount * this.selected) / 26) * (period * 26);
             case "52":
-              iAmount = ((amount * this.selected) / 52) * (period * 52);
-              this.calcItem(iAmount);
-              return iAmount.toLocaleString("en-US", {
-                style: "currency",
-                currency: "AUD",
-              });
-          }
-          break;
-      }
-    },
-    calcCate(value) {
-      console.log("tt", value);
-      // return this.cateAmount
-    },
-    calcItems(amount, period) {
-      // console.log("this.selected", this.selected);
-      // console.log("period", period);
-      // console.log("selected", selected);
-      // console.log("amount", amount);
-
-      switch (this.selected) {
-        case "1":
-          switch (period) {
-            case "1":
-              // this.cateAmount =  (amount * this.selected * period)
-              return amount * this.selected * period;
-            case "4":
-              return ((amount * this.selected) / 4) * (period * 4);
-            case "12":
-              return ((amount * this.selected) / 12) * (period * 12);
-            case "26":
-              return ((amount * this.selected) / 26) * (period * 26);
-            case "52":
-              //  (this.itemInfo.amount)=(amount * this.selected/52 * (period * 52));
-              return ((amount * this.selected) / 52) * (period * 52);
+              return ((amount * this.selected) / 52) * period * 52;
           }
           break;
         case "4":
           switch (period) {
             case "1":
-              return amount * this.selected * period * 4;
+              return ((amount * this.selected) / 4) * period * 4;
             case "4":
-              return ((amount * this.selected) / 4) * (period * 4);
+              return ((amount * this.selected) / 4) * (period / 4);
             case "12":
-              return ((amount * this.selected) / 12) * (period * 4);
+              return ((amount * this.selected) / 4) * (period / 4);
             case "26":
-              return ((amount * this.selected) / 26) * (period * 4);
+              return ((amount * this.selected) / 4) * (period / 4);
             case "52":
-              return ((amount * this.selected) / 52) * (period * 4);
+              return ((amount * this.selected) / 4) * (period / 4);
+          }
+          break;
+        case "12":
+          switch (period) {
+            case "1":
+              return ((amount * this.selected) / 12) * period * 12;
+            case "4":
+              return ((amount * this.selected) / 12) * (period / 12);
+            case "12":
+              return ((amount * this.selected) / 12) * (period / 12);
+            case "26":
+              return ((amount * this.selected) / 12) * (period / 12);
+            case "52":
+              return ((amount * this.selected) / 12) * (period / 12);
+          }
+          break;
+        case "26":
+          switch (period) {
+            case "1":
+              return ((amount * this.selected) / 26) * period * 26;
+            case "4":
+              return ((amount * this.selected) / 26) * (period / 26);
+            case "12":
+              return ((amount * this.selected) / 26) * (period / 26);
+            case "26":
+              return ((amount * this.selected) / 26) * (period / 26);
+            case "52":
+              return ((amount * this.selected) / 26) * (period / 26);
           }
           break;
 
         case "52":
           switch (period) {
             case "1":
-              this.cateAmount = (((amount * this.selected) / 52) * period) / 52;
               return (((amount * this.selected) / 52) * period) / 52;
             case "4":
               return (((amount * this.selected) / 52) * period) / 52;
@@ -382,7 +374,6 @@ console.log("m",myView)
             case "26":
               return (((amount * this.selected) / 52) * period) / 52;
             case "52":
-              this.cateAmount = (((amount * this.selected) / 52) * period) / 52;
               return (((amount * this.selected) / 52) * period) / 52;
           }
           break;
