@@ -10,7 +10,10 @@
           <div class="mb-4">
             View Period
             <div class="w-100">
-              <select @click="updateView(userId, this.selected)" class="form-select" v-model="this.selected">
+              <select
+                class="form-select"
+                v-model="this.selected"
+              >
                 <option
                   v-for="option in options"
                   :key="option"
@@ -25,7 +28,7 @@
             ><h3 class="mb-0">Total</h3>
             <h3 class="mb-0">
               {{
-                calcTotalCate(categories).toLocaleString("en-US", {
+                calcTotalCate(categories, categories.id).toLocaleString("en-US", {
                   style: "currency",
                   currency: "AUD",
                 })
@@ -61,7 +64,7 @@
                   <span class="w-100 badge badge-primary badge-pill">
                     <router-link
                       @click="pathTo(category.id)"
-                      :to="{ path: `/edit/${category.id}` }"
+                      :to="{ path: `/category/${category.id}` }"
                       class="btn btn-secondary m-1"
                       >Edit</router-link
                     >
@@ -87,7 +90,12 @@
                     <li class="list-group-item">
                       <div
                         v-if="!itemEdit"
-                        class="btn btn-secondary d-flex justify-content-between w-100"
+                        class="
+                          btn btn-secondary
+                          d-flex
+                          justify-content-between
+                          w-100
+                        "
                       >
                         {{ item.name }}
                         <i
@@ -105,8 +113,11 @@
                           class="form-control m-0 w-100"
                           :placeholder="`${item.name}`"
                           v-model="item.name"
-                        /><button @click="saveItem(item)"
-                          v-if="itemEdit" class="btn-success fa-solid fa-plus"></button>
+                        /><button
+                          @click="saveItem(item)"
+                          v-if="itemEdit"
+                          class="btn-success fa-solid fa-plus"
+                        ></button>
                       </span>
                       <div class="d-flex flex-row m-2">
                         <input
@@ -135,7 +146,8 @@
                         {{
                           calcItems(
                             item.amount,
-                            item.selected
+                            item.selected,
+                            this.selected
                           ).toLocaleString("en-US", {
                             style: "currency",
                             currency: "AUD",
@@ -168,8 +180,8 @@
   </main>
 </template>
 <script>
-import {itemsColRef, viewsColRef} from "../firebase";
-import { getDocs, doc, deleteDoc, setDoc} from "firebase/firestore";
+import { itemsColRef, viewsColRef } from "../firebase";
+import { getDocs, doc, deleteDoc, setDoc, getDoc, addDoc } from "firebase/firestore";
 // import { getDocs, doc, deleteDoc, setDoc} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -196,8 +208,12 @@ export default {
       userId: userId,
       username: username,
       docRef: null,
-      selected: "1",
-      viewInfo: [],
+      viewDocRef: null,
+      selected: null,
+      viewInfo: {
+        selected: null,
+        userId: userId,
+      },
       options: [
         { period: "Weekly", value: "52" },
         { period: "Fortnightly", value: "26" },
@@ -205,61 +221,65 @@ export default {
         { period: "Quarterly", value: "4" },
         { period: "Annually", value: "1" },
       ],
-      items: [],
       categories: [],
       itemInfo: {
         //   id: null
         //   userId: null,
         //   value: null,
         name: null,
-        // amount: null,
+        amount: null,
         //   category: null,
         //   selected: null
       },
+      item: {
+        amount: null
+      },
     };
   },
-  watch: {},
+  watch: {
+    // item(newval, oldval){
+    //   console.log("newvalaa", newval, oldval)
+    //         newval.forEach((i) => {
+    //              console.log('11',i)
+    //           i.items.forEach((ii) => {
+    //            console.log('22',ii.id)
+    //   this.saveItem(newval, ii.id)
+    //     })
+    //         })
+    // },    
+    // categories(newval, oldval){
+    //   console.log("newvalzzz", newval, oldval)
+    //         newval.forEach((i) => {
+    //              console.log('11zz',i)
+    //           i.items.forEach((ii) => {
+    //            console.log('22zz',ii.id)
+    //   this.saveItem(newval, ii.id)
+    //     })
+    //         })
+    // },
+    selected (newval) {
+      this.updateView(userId, newval)
+      console.log("newVal: ", newval);
+    },
+    categories(thoe)
+    {
+      console.log("newValzzz", thoe)
+    }
+    },
   methods: {
-    async updateView(userId, myView){
+    async updateView(userId, myView) {
+      //  console.log('s',this.selected)
+      // this.selected = myView
+      console.log("m", myView);
 
-    //  console.log('s',this.selected)
-// this.selected = myView
-console.log("m",myView)
-            const newView = {
-              userId: userId,
-            selected:myView,
-          };
-          this.viewInfo.push(newView);
-                    console.log("this", this.viewInfo);
-           await setDoc(viewsColRef, this.viewInfo)
-
-       
-      // let viewRef = doc(viewsColRef, item.id);
-      // this.docRef = viewRef;
-      // this.view = item;
-
-      // await setDoc(this.docRef, this.itemInfo);
-      // this.itemEdit = false;
+      let viewRef = doc(viewsColRef, userId);
+      this.viewDocRef = viewRef;
+      this.viewInfo.selected = myView;
+      this.viewInfo.userId = userId;
+      console.log("this", this.viewInfo);
+      await setDoc(this.viewDocRef, this.viewInfo);
     },
-   async viewSelected(userId, myView){
-  let view;
-       console.log('creating here', myView)
-
- let viewSnap = await getDocs(viewsColRef, userId);
-        
-        //  console.log("viewSnap", viewSnap);
-      viewSnap.forEach((v) => {
-        console.log("viewSnapz", v);
-        // if (v.data().userId === userId) {
-          view = v.data().view;
-          this.viewInfo = view
-       console.log("view",  view)
-        // }
-      });
-      
-     
-
-    },
+    async viewSelected() {},
     editInput(item) {
       this.itemEdit = true;
       console.log("item", item);
@@ -273,15 +293,16 @@ console.log("m",myView)
     },
     calcTotalCate(categories) {
       let total = 0;
-      console.log("categories", categories);
+      console.log("categorieszaxasca", categories);
       categories.forEach((i) => {
         i.items.forEach((ii) => {
           total += this.calcItems(ii.amount, ii.selected, this.selected);
         });
       });
+      
+            // this.saveItem(categories, itemId)
       // let total=0
       //  total  += categories.value
-
       return total;
     },
     calcTotalItems(category) {
@@ -293,91 +314,10 @@ console.log("m",myView)
     },
 
     calcItems(amount, period, selected) {
-      // let iAmount;
-
-      // let temp = 0
-
-      // let a = amount.toLocaleString("en-US", {style:"currency", currency:"AUD"});
-      //  temp += amount
 
       console.log("selected", selected);
       console.log("period", period);
-      // console.log("iAmount", iAmount);
-      //  console.log( 'vv', new Intl.NumberFormat('en-us', { style: 'currency', currency: 'AUD' }).format(iAmount))
-      // this.itemInfo.amount = iAmount.toLocaleString("en-US", {style:"currency", currency:"AUD"})
-        switch (this.selected) {
-        case "1":
-          switch (period) {
-            case "1":
-              return amount * this.selected * period;
-            case "4":
-              return ((amount * this.selected) / 4) * (period * 4);
-            case "12":
-              return ((amount * this.selected) / 12) * (period * 12);
-            case "26":
-              return ((amount * this.selected) / 26) * (period * 26);
-            case "52":
-              return ((amount * this.selected) / 52) * period * 52;
-          }
-          break;
-        case "4":
-          switch (period) {
-            case "1":
-              return ((amount * this.selected) / 4) * period * 4;
-            case "4":
-              return ((amount * this.selected) / 4) * (period / 4);
-            case "12":
-              return ((amount * this.selected) / 4) * (period / 4);
-            case "26":
-              return ((amount * this.selected) / 4) * (period / 4);
-            case "52":
-              return ((amount * this.selected) / 4) * (period / 4);
-          }
-          break;
-        case "12":
-          switch (period) {
-            case "1":
-              return ((amount * this.selected) / 12) * period * 12;
-            case "4":
-              return ((amount * this.selected) / 12) * (period / 12);
-            case "12":
-              return ((amount * this.selected) / 12) * (period / 12);
-            case "26":
-              return ((amount * this.selected) / 12) * (period / 12);
-            case "52":
-              return ((amount * this.selected) / 12) * (period / 12);
-          }
-          break;
-        case "26":
-          switch (period) {
-            case "1":
-              return ((amount * this.selected) / 26) * period * 26;
-            case "4":
-              return ((amount * this.selected) / 26) * (period / 26);
-            case "12":
-              return ((amount * this.selected) / 26) * (period / 26);
-            case "26":
-              return ((amount * this.selected) / 26) * (period / 26);
-            case "52":
-              return ((amount * this.selected) / 26) * (period / 26);
-          }
-          break;
-
-        case "52":
-          switch (period) {
-            case "1":
-              return (((amount * this.selected) / 52) * period) / 52;
-            case "4":
-              return (((amount * this.selected) / 52) * period) / 52;
-            case "12":
-              return (((amount * this.selected) / 52) * period) / 52;
-            case "26":
-              return (((amount * this.selected) / 52) * period) / 52;
-            case "52":
-              return (((amount * this.selected) / 52) * period) / 52;
-          }
-          break;
-      }
+return amount * period/this.selected
     },
     pathTo(cateId) {
       this.$router.push("/category/" + cateId);
@@ -388,9 +328,29 @@ console.log("m",myView)
       this.itemInfo = item;
       console.log(item);
       await setDoc(this.docRef, this.itemInfo);
-      this.itemEdit = false;
+      this.itemEdit = false
     },
     async fetchItems(userId) {
+    let viewRef = doc(viewsColRef, userId);
+      this.viewDocRef = viewRef;
+      let viewSnap = await getDoc(this.viewDocRef, userId);
+
+      if (!viewSnap.exists()) {
+  
+               console.log("zzz");
+        // if (this.selected === null) {
+                  this.selected = "1";
+          this.viewInfo.selected = this.selected;
+          this.viewInfo.userId = userId;
+          await addDoc(viewsColRef, this.viewInfo);
+        // }
+
+      }else{
+                  console.log("hererer", viewSnap.data());        
+        this.viewInfo.selected = viewSnap.data().selected
+        this.selected = viewSnap.data().selected
+      }
+
       const categories = [];
       let cateSnap = await getDocs(itemsColRef, userId);
 
@@ -420,9 +380,9 @@ console.log("m",myView)
           }
         }
       });
-if (categories){
+      if (categories) {
         this.categories = categories;
-}
+      }
 
       // let categories = [];
       // let items = [];
@@ -496,7 +456,7 @@ if (categories){
   },
   created() {
     this.fetchItems(userId);
-    this.viewSelected(userId, this.selected)
+    // this.viewSelected(userId)
   },
 };
 </script>
