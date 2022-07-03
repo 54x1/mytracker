@@ -98,11 +98,7 @@
                         "
                       >
                         {{ item.name }}
-                        <i
-                          v-if="!itemEdit"
-                          @click="editInput(item.name)"
-                          class="fas fa-edit m-0 p-0"
-                        ></i>
+                        <i v-if="!itemEdit" @click="editInput(item.name)"  class="fas fa-edit m-0 p-0"></i>
                       </div>
                       <span
                         v-if="itemEdit"
@@ -114,7 +110,7 @@
                           :placeholder="`${item.name}`"
                           v-model="item.name"
                         /><button
-                          @click="saveItem(item)"
+                          @change="saveItem(item)"
                           v-if="itemEdit"
                           class="btn-success fa-solid fa-plus"
                         ></button>
@@ -125,13 +121,13 @@
                           step="any"
                           class="form-control mb-0 w-100"
                           placeholder="Enter Amount"
-                          @keyup="saveItem(item)"
+                          @change="saveItem(item)"
                           v-model="item.amount"
                         />
                         <select
-                          @click="saveItem(item)"
                           class="form-select"
-                          v-model="item.selected"
+                          @change="saveItem(item)"
+                            v-model="item.select"
                         >
                           <option
                             v-for="option in options"
@@ -147,7 +143,8 @@
                           calcItems(
                             item.amount,
                             item.selected,
-                            this.selected
+                            this.selected,
+                            item                          
                           ).toLocaleString("en-US", {
                             style: "currency",
                             currency: "AUD",
@@ -222,6 +219,7 @@ export default {
         { period: "Annually", value: "1" },
       ],
       categories: [],
+      items: [],
       itemInfo: {
         //   id: null
         //   userId: null,
@@ -230,9 +228,6 @@ export default {
         amount: null,
         //   category: null,
         //   selected: null
-      },
-      item: {
-        amount: null
       },
     };
   },
@@ -261,10 +256,10 @@ export default {
       this.updateView(userId, newval)
       console.log("newVal: ", newval);
     },
-    categories(thoe)
-    {
-      console.log("newValzzz", thoe)
-    }
+     categories(val){
+      console.log("newValzzz", val)
+      // this.saveItem()
+    },
     },
   methods: {
     async updateView(userId, myView) {
@@ -296,7 +291,12 @@ export default {
       console.log("categorieszaxasca", categories);
       categories.forEach((i) => {
         i.items.forEach((ii) => {
-          total += this.calcItems(ii.amount, ii.selected, this.selected);
+          total += this.calcItems(ii.amount, ii.selected, this.selected, ii);
+      //           let itemRef = doc(itemsColRef, ii.id);
+      // this.docRef = itemRef;
+      // this.itemInfo = ii;
+      // console.log(ii);
+      // setDoc(this.docRef, this.itemInfo);
         });
       });
       
@@ -308,26 +308,37 @@ export default {
     calcTotalItems(category) {
       let total = 0;
       category.items.forEach((i) => {
-        total += this.calcItems(i.amount, i.selected, this.selected);
+        total += this.calcItems(i.amount, i.selected, this.selected, i);
       });
       return total;
     },
 
-    calcItems(amount, period, selected) {
+     calcItems(amount, period, selected, item) {
 
-      console.log("selected", selected);
-      console.log("period", period);
+      console.log("selectedcz", selected);
+      console.log("periodcz", period);
+console.log("item", item)
+this.items = item
+    // this.saveItem(item)
 return amount * period/this.selected
     },
     pathTo(cateId) {
       this.$router.push("/category/" + cateId);
     },
     async saveItem(item) {
+    
       let itemRef = doc(itemsColRef, item.id);
       this.docRef = itemRef;
       this.itemInfo = item;
       console.log(item);
       await setDoc(this.docRef, this.itemInfo);
+      // if (this.item.id){
+      //   console.log()
+      //      let itemRef = doc(itemsColRef, this.item.id);
+      // this.docRef = itemRef;
+      // this.itemInfo = this.item;
+      // await setDoc(this.docRef, this.itemInfo);
+      // }
       this.itemEdit = false
     },
     async fetchItems(userId) {
@@ -383,56 +394,6 @@ return amount * period/this.selected
       if (categories) {
         this.categories = categories;
       }
-
-      // let categories = [];
-      // let items = [];
-      // let cateSnap = await getDocs(itemsColRef, userId);
-      // cateSnap.forEach((cate) => {
-      //   console.log("catesnap", cate.data());
-      //   if (cate.data().userId === userId && !cate.data().category) {
-      //     console.log("item.id", cate.id);
-      //     let cateData = cate.data();
-      //     cateData.id = cate.id;
-      //     categories.push(cateData);
-      //   }
-
-      //   if (
-      //     cate.data().userId === userId &&
-      //     cate.data().category !== cate.data().id
-      //   ) {
-      //     let catData = cate.data();
-      //     catData.id = cate.id;
-      //     // this.itemInfo.amount = catData.amount
-      //     // console.log("a",  this.itemInfo.amount, catData.selected);
-      //     items.push(catData);
-      //   }
-      // });
-      // this.items = items
-      // this.categories = categories;
-
-      // //        console.log(itemsSnap)
-      // console.log("cate", categories);
-      // console.log("item", items);
-
-      //   let itemId = getItemId
-      //     console.log('ii', itemId)
-      //   let itemRef =  doc(itemsColRef, item.id)
-      //       this.docRef = itemRef
-
-      // let item = await getDoc(this.docRef, item.id)
-      // console.log("item", item.data())
-      // this.itemName = item.data().name
-      // let itemData = item.data()
-      // this.itemInfo.id = itemData.id
-      // this.itemInfo.name = itemData.name
-      // this.itemInfo.amount = itemData.amount
-      // this.itemInfo.value = itemData.value
-      // this.itemInfo.category = itemData.categoryf
-      // this.itemInfo.userId = userId
-      // this.iteminfo.selected = itemData.selected
-      // this.itemSelected = itemData.selected
-      //  this.itemId = item.id
-      //     console.log("id",this.itemSelected  )
     },
     async deleteItem(itemId, userId) {
       if (confirm("Item has been deleted!")) {
