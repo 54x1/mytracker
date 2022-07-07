@@ -110,7 +110,7 @@
                           :placeholder="`${item.name}`"
                           v-model="item.name"
                         /><button
-                          @change="saveItem(item)"
+                          @click="saveItem(item)"
                           v-if="itemEdit"
                           class="btn-success fa-solid fa-plus"
                         ></button>
