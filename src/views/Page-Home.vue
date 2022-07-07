@@ -127,7 +127,7 @@
                         <select
                           class="form-select"
                           @change="saveItem(item)"
-                            v-model="item.select"
+                            v-model="item.selected"
                         >
                           <option
                             v-for="option in options"
